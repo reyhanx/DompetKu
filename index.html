@@ -81,7 +81,6 @@
             padding-top: calc(20px + var(--safe-top));
         }
 
-        /* Glass Card Base */
         .glass {
             background: var(--card-bg);
             backdrop-filter: blur(24px) saturate(1.8);
@@ -139,7 +138,6 @@
 
         .header-actions { display: flex; align-items: center; gap: 10px; }
 
-        /* Night Mode Toggle Switch */
         .toggle-switch {
             width: 52px;
             height: 32px;
@@ -172,10 +170,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .toggle-switch.active {
-            background: var(--accent);
-        }
-
+        .toggle-switch.active { background: var(--accent); }
         .toggle-switch.active::before {
             content: '🌙';
             transform: translateX(20px);
@@ -202,64 +197,61 @@
 
         .btn-icon:active { transform: scale(0.92); }
 
-        /* ===== COMBINED SUMMARY CARD (Mobile) ===== */
-        .summary-combined {
-            padding: 20px;
+        /* ===== VERTICAL SUMMARY CARD ===== */
+        .summary-vertical {
+            padding: 8px 20px;
             margin-bottom: 20px;
         }
 
-        .summary-combined .summary-row {
+        .summary-row-v {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
             gap: 12px;
         }
 
-        .summary-combined .summary-item {
+        .summary-row-v:not(:last-child) {
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .summary-row-v .info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             flex: 1;
-            text-align: center;
-            padding: 12px 8px;
-            border-radius: 16px;
-            transition: background 0.2s;
         }
 
-        .summary-combined .summary-item:active {
-            background: var(--pill-active);
-        }
-
-        .summary-combined .summary-item .label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+        .summary-row-v .info .icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-        }
-
-        .summary-combined .summary-item .amount {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            white-space: nowrap;
-        }
-
-        .summary-combined .summary-item.income .amount { color: var(--success); }
-        .summary-combined .summary-item.expense .amount { color: var(--danger); }
-        .summary-combined .summary-item.balance .amount { color: var(--accent); }
-
-        .summary-combined .summary-item .icon {
-            font-size: 14px;
-        }
-
-        .summary-combined .divider {
-            width: 1px;
-            height: 40px;
-            background: var(--card-border);
+            font-size: 18px;
+            background: var(--accent-soft);
+            border: 1px solid var(--card-border);
             flex-shrink: 0;
         }
 
-        /* Balance hidden state */
+        .summary-row-v .info .text .label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .summary-row-v .info .text .amount {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-top: 2px;
+        }
+
+        .summary-row-v.income .amount { color: var(--success); }
+        .summary-row-v.expense .amount { color: var(--danger); }
+        .summary-row-v.balance .amount { color: var(--accent); }
+
         .balance-hidden .amount {
             font-size: 1.4rem !important;
             letter-spacing: 4px !important;
@@ -268,9 +260,7 @@
             user-select: none;
         }
 
-        .balance-hidden .amount:active {
-            opacity: 0.6;
-        }
+        .balance-hidden .amount:active { opacity: 0.6; }
 
         /* Section Title */
         .section-title {
@@ -523,6 +513,7 @@
             padding: 14px 0;
             border-bottom: 1px solid var(--card-border);
             transition: all 0.3s;
+            position: relative;
         }
 
         .transaction-item:last-child { border-bottom: none; }
@@ -581,12 +572,97 @@
         .transaction-amount {
             font-weight: 700;
             font-size: 0.95rem;
-            margin-right: 10px;
+            margin-right: 8px;
             white-space: nowrap;
         }
 
         .transaction-amount.income { color: var(--success); }
         .transaction-amount.expense { color: var(--danger); }
+
+        /* ===== DROPDOWN MENU ===== */
+        .dropdown-wrap {
+            position: relative;
+        }
+
+        .dropdown-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+
+        .dropdown-btn:active {
+            background: var(--pill-active);
+            transform: scale(0.9);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            background: var(--card-bg);
+            backdrop-filter: blur(30px) saturate(1.8);
+            -webkit-backdrop-filter: blur(30px) saturate(1.8);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--card-shadow);
+            padding: 8px;
+            min-width: 160px;
+            z-index: 50;
+            display: none;
+            animation: dropdownIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        @keyframes dropdownIn {
+            from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            touch-action: manipulation;
+        }
+
+        .dropdown-item:active {
+            background: var(--pill-active);
+            transform: scale(0.98);
+        }
+
+        .dropdown-item.danger {
+            color: var(--danger);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--card-border);
+            margin: 6px 8px;
+        }
 
         .empty-state {
             text-align: center;
@@ -600,9 +676,7 @@
             opacity: 0.4;
         }
 
-        /* ============================================
-           FLOATING PILL NAVIGATION (All screens!)
-           ============================================ */
+        /* Floating Pill Navigation */
         .floating-nav-wrapper {
             position: fixed;
             bottom: calc(20px + var(--safe-bottom));
@@ -670,7 +744,7 @@
             transition: border-color 0.5s ease;
         }
 
-        /* Floating Action Button */
+        /* FAB */
         .fab {
             position: fixed;
             bottom: calc(100px + var(--safe-bottom));
@@ -699,7 +773,7 @@
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Modal */
+        /* Modal Base */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -781,6 +855,96 @@
             margin: 0 auto 20px;
         }
 
+        /* Detail Modal Specific */
+        .detail-content {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .detail-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+        }
+
+        .detail-icon.income { background: rgba(52, 199, 89, 0.1); border-color: rgba(52, 199, 89, 0.2); }
+        .detail-icon.expense { background: rgba(255, 59, 48, 0.1); border-color: rgba(255, 59, 48, 0.2); }
+
+        .detail-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .detail-amount.income { color: var(--success); }
+        .detail-amount.expense { color: var(--danger); }
+
+        .detail-type {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .detail-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+        }
+
+        .detail-row .label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .detail-row .value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+        }
+
+        .detail-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .detail-actions .btn {
+            width: 100%;
+        }
+
+        .detail-actions .btn-edit {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .detail-actions .btn-delete {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -792,7 +956,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== TOAST: From Top Notch (Anti-Spam) ===== */
+        /* Toast */
         .toast-container {
             position: fixed;
             top: 0;
@@ -818,6 +982,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-align: center;
+            justify-content: center;
             background: var(--nav-bg);
             backdrop-filter: blur(24px) saturate(1.5);
             -webkit-backdrop-filter: blur(24px) saturate(1.5);
@@ -889,7 +1055,6 @@
                 padding: 32px;
             }
             .modal-overlay.active .modal-sheet { transform: translateY(0) scale(1); }
-            .summary-combined .summary-item .amount { font-size: 1.3rem; }
         }
 
         @media (max-width: 768px) {
@@ -897,6 +1062,7 @@
             .desktop-only { display: none; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="container">
@@ -915,31 +1081,33 @@
 
         <!-- HOME PAGE -->
         <div class="page active" id="page-home">
-            <!-- Combined Summary Card (1 box for all 3) -->
-            <div class="summary-combined glass" id="summaryCombined">
-                <div class="summary-row">
-                    <div class="summary-item income">
-                        <div class="label">
-                            <span class="icon">📥</span>
-                            Masuk
+            <!-- Vertical Summary Card -->
+            <div class="summary-vertical glass" id="summaryVertical">
+                <div class="summary-row-v income">
+                    <div class="info">
+                        <div class="icon-wrap">📥</div>
+                        <div class="text">
+                            <div class="label">Pemasukan</div>
+                            <div class="amount" id="totalIncome">Rp 0</div>
                         </div>
-                        <div class="amount" id="totalIncome">Rp 0</div>
                     </div>
-                    <div class="divider"></div>
-                    <div class="summary-item expense">
-                        <div class="label">
-                            <span class="icon">📤</span>
-                            Keluar
+                </div>
+                <div class="summary-row-v expense">
+                    <div class="info">
+                        <div class="icon-wrap">📤</div>
+                        <div class="text">
+                            <div class="label">Pengeluaran</div>
+                            <div class="amount" id="totalExpense">Rp 0</div>
                         </div>
-                        <div class="amount" id="totalExpense">Rp 0</div>
                     </div>
-                    <div class="divider"></div>
-                    <div class="summary-item balance" id="balanceItem">
-                        <div class="label">
-                            <span class="icon">💎</span>
-                            Sisa
+                </div>
+                <div class="summary-row-v balance" id="balanceRow">
+                    <div class="info">
+                        <div class="icon-wrap">💎</div>
+                        <div class="text">
+                            <div class="label">Sisa Uang</div>
+                            <div class="amount" id="balance">Rp 0</div>
                         </div>
-                        <div class="amount" id="balance">Rp 0</div>
                     </div>
                 </div>
             </div>
@@ -1026,7 +1194,6 @@
             <div class="card glass">
                 <h2>⚙️ Pengaturan</h2>
 
-                <!-- Hide Balance Toggle -->
                 <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--input-bg); border-radius: 16px; border: 1px solid var(--card-border); margin-bottom: 16px;">
                     <div>
                         <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px;">🔒 Sembunyikan Sisa Uang</div>
@@ -1054,7 +1221,7 @@
     <!-- Floating Action Button -->
     <button class="fab" id="fab" onclick="openModal()">+</button>
 
-    <!-- FLOATING PILL NAVIGATION (Desktop + Mobile) -->
+    <!-- FLOATING PILL NAVIGATION -->
     <div class="floating-nav-wrapper">
         <nav class="floating-nav">
             <button class="floating-nav-item active" onclick="navigate('home')" title="Beranda">
@@ -1074,12 +1241,12 @@
     </div>
 
     <!-- Add Transaction Modal -->
-    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal-overlay" id="modalAdd" onclick="closeModalAdd(event)">
         <div class="modal-sheet" onclick="event.stopPropagation()">
             <div class="modal-drag"></div>
             <div class="modal-header">
                 <h2>📝 Tambah Transaksi</h2>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <button class="modal-close" onclick="closeModalAdd()">✕</button>
             </div>
             <form id="transactionForm" onsubmit="addTransaction(event)">
                 <div class="form-row">
@@ -1125,6 +1292,20 @@
         </div>
     </div>
 
+    <!-- Detail Transaction Modal -->
+    <div class="modal-overlay" id="modalDetail" onclick="closeModalDetail(event)">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-drag"></div>
+            <div class="modal-header">
+                <h2>📄 Detail Transaksi</h2>
+                <button class="modal-close" onclick="closeModalDetail()">✕</button>
+            </div>
+            <div id="detailContent">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -1135,6 +1316,8 @@
         let hideBalance = JSON.parse(localStorage.getItem('dompetku_hide_balance')) || false;
         let isThemeAnimating = false;
         let toastTimeout = null;
+        let currentDetailId = null;
+        let openDropdownId = null;
 
         const categoryColors = {
             'Gaji': '#34c759', 'Bonus': '#30d158', 'Investasi': '#64d2ff',
@@ -1156,12 +1339,18 @@
                 document.documentElement.setAttribute('data-theme', 'dark');
                 document.getElementById('themeToggle').classList.add('active');
             }
-            // Apply hide balance state
             if (hideBalance) {
                 document.getElementById('hideBalanceToggle').classList.add('active');
-                document.getElementById('balanceItem').classList.add('balance-hidden');
+                document.getElementById('balanceRow').classList.add('balance-hidden');
             }
             updateUI();
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.dropdown-wrap')) {
+                    closeAllDropdowns();
+                }
+            });
         });
 
         function formatCurrency(amount) {
@@ -1169,7 +1358,7 @@
         }
 
         function formatDate(dateString) {
-            return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
         function formatShortCurrency(val) {
@@ -1178,19 +1367,16 @@
             return val.toString();
         }
 
-        // ===== ANTI-SPAM THEME TOGGLE =====
+        // ===== THEME TOGGLE =====
         function toggleTheme() {
-            if (isThemeAnimating) return; // Block spam
+            if (isThemeAnimating) return;
             isThemeAnimating = true;
-
             const html = document.documentElement;
             const toggle = document.getElementById('themeToggle');
             const current = html.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
-
             html.setAttribute('data-theme', next);
             localStorage.setItem('dompetku_theme', next);
-
             if (next === 'dark') {
                 toggle.classList.add('active');
                 document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000000');
@@ -1198,73 +1384,137 @@
                 toggle.classList.remove('active');
                 document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
             }
-
             renderCharts();
             showToast(next === 'dark' ? '🌙 Night mode aktif' : '☀️ Light mode aktif', 'success');
-
-            // Unlock after animation
             setTimeout(() => { isThemeAnimating = false; }, 400);
         }
 
-        // ===== HIDE BALANCE TOGGLE =====
+        // ===== HIDE BALANCE =====
         function toggleHideBalance() {
             hideBalance = !hideBalance;
             localStorage.setItem('dompetku_hide_balance', hideBalance);
-
             const toggle = document.getElementById('hideBalanceToggle');
-            const balanceItem = document.getElementById('balanceItem');
-
+            const balanceRow = document.getElementById('balanceRow');
             if (hideBalance) {
                 toggle.classList.add('active');
-                balanceItem.classList.add('balance-hidden');
+                balanceRow.classList.add('balance-hidden');
                 showToast('🔒 Sisa uang disembunyikan', 'success');
             } else {
                 toggle.classList.remove('active');
-                balanceItem.classList.remove('balance-hidden');
+                balanceRow.classList.remove('balance-hidden');
                 showToast('🔓 Sisa uang ditampilkan', 'success');
             }
             updateSummary();
         }
 
-        // Click on hidden balance to reveal temporarily
+        // Tap hidden balance to reveal temporarily
         document.addEventListener('click', (e) => {
-            if (e.target.closest('#balanceItem.balance-hidden')) {
-                const balanceItem = document.getElementById('balanceItem');
-                balanceItem.classList.remove('balance-hidden');
+            if (e.target.closest('#balanceRow.balance-hidden')) {
+                const balanceRow = document.getElementById('balanceRow');
+                balanceRow.classList.remove('balance-hidden');
                 setTimeout(() => {
-                    if (hideBalance) balanceItem.classList.add('balance-hidden');
+                    if (hideBalance) balanceRow.classList.add('balance-hidden');
                 }, 2000);
             }
         });
 
-        // Navigation
+        // ===== NAVIGATION =====
         function navigate(page) {
             currentPage = page;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
             document.querySelectorAll('.floating-nav-item').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
-
             const fab = document.getElementById('fab');
             if (page === 'home' || page === 'transactions') fab.classList.remove('hidden');
             else fab.classList.add('hidden');
-
             window.scrollTo(0, 0);
             if (page === 'analytics') renderCharts();
         }
 
+        // ===== MODALS =====
         function openModal() {
-            document.getElementById('modal').classList.add('active');
+            document.getElementById('modalAdd').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal(e) {
+        function closeModalAdd(e) {
             if (!e || e.target === e.currentTarget) {
-                document.getElementById('modal').classList.remove('active');
+                document.getElementById('modalAdd').classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
 
+        function openModalDetail(id) {
+            currentDetailId = id;
+            const t = transactions.find(tr => tr.id === id);
+            if (!t) return;
+
+            const content = document.getElementById('detailContent');
+            content.innerHTML = `
+                <div class="detail-content">
+                    <div class="detail-icon ${t.type}">${categoryIcons[t.category] || '📦'}</div>
+                    <div class="detail-amount ${t.type}">${t.type === 'income' ? '+' : '-'} ${formatCurrency(t.amount)}</div>
+                    <div class="detail-type">${t.type === 'income' ? '📥 Pemasukan' : '📤 Pengeluaran'} • ${t.category}</div>
+
+                    <div class="detail-grid">
+                        <div class="detail-row">
+                            <span class="label">📝 Keterangan</span>
+                            <span class="value">${t.description}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">📅 Tanggal</span>
+                            <span class="value">${formatDate(t.date)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">🏷️ Kategori</span>
+                            <span class="value">${t.category}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">💱 Tipe</span>
+                            <span class="value">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-actions">
+                        <button class="btn btn-edit" onclick="editTransaction(${t.id})">✏️ Edit</button>
+                        <button class="btn btn-delete" onclick="deleteFromDetail(${t.id})">🗑️ Hapus</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalDetail').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            closeAllDropdowns();
+        }
+
+        function closeModalDetail(e) {
+            if (!e || e.target === e.currentTarget) {
+                document.getElementById('modalDetail').classList.remove('active');
+                document.body.style.overflow = '';
+                currentDetailId = null;
+            }
+        }
+
+        // ===== DROPDOWN =====
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            const menu = document.getElementById('dropdown-' + id);
+            if (openDropdownId === id) {
+                closeAllDropdowns();
+                return;
+            }
+            closeAllDropdowns();
+            menu.classList.add('active');
+            openDropdownId = id;
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+            openDropdownId = null;
+        }
+
+        // ===== TRANSACTION CRUD =====
         function addTransaction(event) {
             event.preventDefault();
             const type = document.getElementById('type').value;
@@ -1281,11 +1531,10 @@
             transactions.unshift(transaction);
             saveData();
             updateUI();
-            closeModal();
+            closeModalAdd();
             document.getElementById('transactionForm').reset();
             document.getElementById('date').valueAsDate = new Date();
             showToast('Transaksi berhasil ditambahkan!', 'success');
-
             if (currentPage !== 'transactions') {
                 document.getElementById('navDot').style.display = 'block';
             }
@@ -1298,6 +1547,51 @@
                 updateUI();
                 showToast('Transaksi dihapus', 'success');
             }
+        }
+
+        function deleteFromDetail(id) {
+            if (confirm('Yakin ingin menghapus transaksi ini?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveData();
+                updateUI();
+                closeModalDetail();
+                showToast('Transaksi dihapus', 'success');
+            }
+        }
+
+        function editTransaction(id) {
+            const t = transactions.find(tr => tr.id === id);
+            if (!t) return;
+
+            // Close detail modal and open add modal with pre-filled data
+            closeModalDetail();
+
+            document.getElementById('type').value = t.type;
+            document.getElementById('category').value = t.category;
+            document.getElementById('amount').value = t.amount;
+            document.getElementById('date').value = t.date;
+            document.getElementById('description').value = t.description;
+
+            // Change form to edit mode
+            const form = document.getElementById('transactionForm');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                t.type = document.getElementById('type').value;
+                t.category = document.getElementById('category').value;
+                t.amount = parseInt(document.getElementById('amount').value);
+                t.date = document.getElementById('date').value;
+                t.description = document.getElementById('description').value;
+                saveData();
+                updateUI();
+                closeModalAdd();
+                form.reset();
+                document.getElementById('date').valueAsDate = new Date();
+                form.onsubmit = addTransaction;
+                showToast('Transaksi berhasil diupdate!', 'success');
+            };
+
+            openModal();
+            showToast('✏️ Edit mode aktif', 'success');
         }
 
         function filterTransactions(filter) {
@@ -1332,8 +1626,8 @@
             document.getElementById('totalIncome').textContent = formatCurrency(income);
             document.getElementById('totalExpense').textContent = formatCurrency(expense);
 
-            if (hideBalance && !document.getElementById('balanceItem').classList.contains('balance-hidden')) {
-                document.getElementById('balanceItem').classList.add('balance-hidden');
+            if (hideBalance && !document.getElementById('balanceRow').classList.contains('balance-hidden')) {
+                document.getElementById('balanceRow').classList.add('balance-hidden');
             }
 
             const balanceEl = document.getElementById('balance');
@@ -1380,14 +1674,29 @@
                             <p>${t.category} • ${formatDate(t.date)}</p>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 4px;">
                         <div class="transaction-amount ${t.type}">${t.type === 'income' ? '+' : '-'} ${formatCurrency(t.amount)}</div>
-                        <button class="btn btn-danger" onclick="deleteTransaction(${t.id})">🗑️</button>
+                        <div class="dropdown-wrap">
+                            <button class="dropdown-btn" onclick="toggleDropdown(${t.id}, event)">⋮</button>
+                            <div class="dropdown-menu" id="dropdown-${t.id}">
+                                <button class="dropdown-item" onclick="openModalDetail(${t.id})">
+                                    📄 Detail
+                                </button>
+                                <button class="dropdown-item" onclick="editTransaction(${t.id})">
+                                    ✏️ Edit
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item danger" onclick="deleteTransaction(${t.id})">
+                                    🗑️ Hapus
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
+        // ===== CHARTS =====
         function renderCharts() {
             renderDonutChart();
             renderLineChart();
@@ -1707,8 +2016,6 @@
         // ===== ANTI-SPAM TOAST =====
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
-
-            // Clear existing toast immediately
             container.innerHTML = '';
             if (toastTimeout) clearTimeout(toastTimeout);
 
@@ -1717,7 +2024,6 @@
             toast.innerHTML = type === 'success' ? '✅ ' + message : '❌ ' + message;
             container.appendChild(toast);
 
-            // Auto remove after animation completes (toast has 2.2s delay + 0.3s out animation)
             toastTimeout = setTimeout(() => {
                 if (toast.parentNode) toast.remove();
             }, 2600);
